@@ -29,5 +29,5 @@ class SfObject[T](ABC):
         pass
 
     @abstractmethod
-    def get(self, id: str): SFRecord
+    def get(self, id: str) -> SFRecord:
         pass
