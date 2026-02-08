@@ -20,7 +20,7 @@ class OpportunityObject(SfObject):
 
     def delete(self, record_id: str) -> bool:
         """Delete a Opportunity record"""
-        self.sf_session.delete(self.lead_endpoint + record_id)
+        self.sf_session.delete(self.opportunity_endpoint + record_id)
         return True
 
     def get(self, record_id: str) -> OpportunityRecord:
