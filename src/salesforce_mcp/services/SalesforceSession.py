@@ -126,6 +126,7 @@ class SalesforceSession:
         except Exception as err:
             logging.error("error")
             logging.error(err)
+            raise err
 
 
 
@@ -149,6 +150,7 @@ class SalesforceSession:
         except Exception as err:
             logging.error("error")
             logging.error(err)
+            raise
 
 
     def delete(self, path):
@@ -169,6 +171,7 @@ class SalesforceSession:
         except Exception as  err:
             logging.error("error")
             logging.error(err)
+            raise err
 
 
     def get(self, path):
@@ -185,5 +188,6 @@ class SalesforceSession:
         except Exception as err:
             logging.error("error")
             logging.error(err)
+            raise err
 
 
