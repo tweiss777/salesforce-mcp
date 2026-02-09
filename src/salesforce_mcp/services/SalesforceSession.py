@@ -146,7 +146,7 @@ class SalesforceSession:
             full_url+= id
             response = self.session.patch(full_url, json=body, headers=headers)
             response.raise_for_status()
-            response_data = json.dumps({"success": True }) if response.status_code == 204 else response.json()
+            response_data = {"success": True } if response.status_code == 204 else response.json()
             return response_data
         except Exception as err:
             logging.error("error")
@@ -167,7 +167,7 @@ class SalesforceSession:
 
             response = self.session.delete(full_url, headers=headers)
             response.raise_for_status()
-            response_data = json.dumps({"success": True }) if response.status_code == 204 else response.json()
+            response_data = {"success": True } if response.status_code == 204 else response.json()
             return response_data
         except Exception as  err:
             logging.error("error")

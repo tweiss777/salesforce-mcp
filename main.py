@@ -4,7 +4,7 @@ from salesforce_mcp.objects.LeadObject import LeadObject
 from salesforce_mcp.types.LeadRecord import LeadRecord
 from salesforce_mcp.objects.OpportunityObject import OpportunityObject
 from salesforce_mcp.types.OpportunityRecord import OpportunityRecord
-from src.salesforce_mcp.services.SalesforceSession import SalesforceSession
+from salesforce_mcp.services.SalesforceSession import SalesforceSession
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 import logging, sys

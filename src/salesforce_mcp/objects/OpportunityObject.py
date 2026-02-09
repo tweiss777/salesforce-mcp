@@ -13,7 +13,7 @@ class OpportunityObject(SfObject):
         response = self.sf_session.create(self.opportunity_endpoint.rstrip('/'), mapped_fields)
         return response
 
-    def update(self, data: OpportunityRecord, record_id: str) -> None:
+    def update(self, data: OpportunityRecord, record_id: str) -> bool:
         """Update an existing Opportunity record"""
         mapped_fields = data.to_salesforce_payload()
         self.sf_session.update(self.opportunity_endpoint, id=record_id, body=mapped_fields)
