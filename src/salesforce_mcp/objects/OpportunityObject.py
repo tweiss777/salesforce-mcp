@@ -17,6 +17,7 @@ class OpportunityObject(SfObject):
         """Update an existing Opportunity record"""
         mapped_fields = data.to_salesforce_payload()
         self.sf_session.update(self.opportunity_endpoint, id=record_id, body=mapped_fields)
+        return True
 
     def delete(self, record_id: str) -> bool:
         """Delete a Opportunity record"""
