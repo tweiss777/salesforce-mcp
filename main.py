@@ -2,6 +2,8 @@
 from salesforce_mcp.utils.soql import SoqlModule
 from salesforce_mcp.objects.LeadObject import LeadObject
 from salesforce_mcp.types.LeadRecord import LeadRecord
+from salesforce_mcp.objects.OpportunityObject import OpportunityObject
+from salesforce_mcp.types.OpportunityRecord import OpportunityRecord
 from src.salesforce_mcp.services.SalesforceSession import SalesforceSession
 from dotenv import load_dotenv
 from fastmcp import FastMCP
@@ -227,7 +229,178 @@ def run_lead_operation(
         raise err
 
 
+@mcp.tool(
+    name="run_opportunity_operation",
+    description="""Runs CRUD operations for creating, updating, deleting, and fetching an Opportunity from Salesforce.
 
+    Operations:
+    - create: Creates a new Opportunity (requires Name, StageName, and CloseDate)
+    - update: Updates an existing Opportunity (requires opportunity_id)
+    - delete: Deletes an Opportunity (requires opportunity_id)
+    - get: Fetches an Opportunity by ID (requires opportunity_id)
+
+    All Salesforce custom fields must end with __c.
+    """,
+)
+def run_opportunity_operation(
+        operation: str,
+        opportunity_id: Optional[str] = None,
+        # Required fields
+        name: Optional[str] = None,
+        stage_name: Optional[str] = None,
+        close_date: Optional[str] = None,  # Format: YYYY-MM-DD
+        # Standard fields
+        account_id: Optional[str] = None,
+        record_type_id: Optional[str] = None,
+        is_private: Optional[bool] = None,
+        description: Optional[str] = None,
+        amount: Optional[float] = None,
+        probability: Optional[float] = None,
+        expected_revenue: Optional[float] = None,
+        total_opportunity_quantity: Optional[float] = None,
+        type: Optional[str] = None,
+        next_step: Optional[str] = None,
+        lead_source: Optional[str] = None,
+        is_closed: Optional[bool] = None,
+        is_won: Optional[bool] = None,
+        forecast_category: Optional[str] = None,
+        campaign_id: Optional[str] = None,
+        pricebook2_id: Optional[str] = None,
+        owner_id: Optional[str] = None,
+        contact_id: Optional[str] = None,
+        contract_id: Optional[str] = None,
+        synced_quote_id: Optional[str] = None,
+        # Custom fields
+        custom_fields: Optional[Dict[str, Any]] = None,
+):
+    """
+    Perform CRUD operations on Salesforce Opportunities.
+
+    Args:
+        operation: One of 'create', 'update', 'delete', or 'get'
+        opportunity_id: Required for update, delete, and get operations
+        name: Opportunity name (required for create)
+        stage_name: Stage name (required for create, e.g., 'Prospecting', 'Qualification', 'Closed Won')
+        close_date: Close date in YYYY-MM-DD format (required for create)
+        account_id: Associated Account ID
+        record_type_id: Record Type ID
+        is_private: Whether the opportunity is private
+        description: Description or notes about the opportunity
+        amount: Opportunity amount
+        probability: Probability percentage (0-100)
+        expected_revenue: Expected revenue
+        total_opportunity_quantity: Total quantity
+        type: Opportunity type (e.g., 'New Customer', 'Existing Customer')
+        next_step: Next step in the sales process
+        lead_source: Source of the opportunity
+        is_closed: Whether the opportunity is closed
+        is_won: Whether the opportunity is won
+        forecast_category: Forecast category
+        campaign_id: Associated Campaign ID
+        pricebook2_id: Price Book ID
+        owner_id: Salesforce User ID of the opportunity owner
+        contact_id: Associated Contact ID
+        contract_id: Associated Contract ID
+        synced_quote_id: Synced Quote ID
+        custom_fields: Dictionary of custom Salesforce fields (e.g., {"My_Field__c": "value"})
+    """
+    try:
+        credentials = get_credentials()
+        sf_session = SalesforceSession(
+            domain=credentials.url,
+            username=credentials.username,
+            password=credentials.password,
+            client_id=credentials.client_id,
+            client_secret=credentials.client_secret
+        )
+        opportunity_object = OpportunityObject(sf_session)
+
+        operation = operation.lower()
+
+        if operation == "create":
+            if not name or not stage_name or not close_date:
+                raise ValueError("Name, StageName, and CloseDate are required for creating an Opportunity")
+
+            opportunity_data = OpportunityRecord(
+                Name=name,
+                StageName=stage_name,
+                CloseDate=close_date,
+                AccountId=account_id,
+                RecordTypeId=record_type_id,
+                IsPrivate=is_private,
+                Description=description,
+                Amount=amount,
+                Probability=probability,
+                ExpectedRevenue=expected_revenue,
+                TotalOpportunityQuantity=total_opportunity_quantity,
+                Type=type,
+                NextStep=next_step,
+                LeadSource=lead_source,
+                IsClosed=is_closed,
+                IsWon=is_won,
+                ForecastCategory=forecast_category,
+                CampaignId=campaign_id,
+                Pricebook2Id=pricebook2_id,
+                OwnerId=owner_id,
+                ContactId=contact_id,
+                ContractId=contract_id,
+                SyncedQuoteId=synced_quote_id,
+                custom_fields=custom_fields or {}
+            )
+            result = opportunity_object.create(opportunity_data)
+            return {"success": True, "operation": "create", "result": result}
+
+        elif operation == "update":
+            if not opportunity_id:
+                raise ValueError("opportunity_id is required for update operation")
+
+            opportunity_data = OpportunityRecord(
+                Name=name,
+                StageName=stage_name,
+                CloseDate=close_date,
+                AccountId=account_id,
+                RecordTypeId=record_type_id,
+                IsPrivate=is_private,
+                Description=description,
+                Amount=amount,
+                Probability=probability,
+                ExpectedRevenue=expected_revenue,
+                TotalOpportunityQuantity=total_opportunity_quantity,
+                Type=type,
+                NextStep=next_step,
+                LeadSource=lead_source,
+                IsClosed=is_closed,
+                IsWon=is_won,
+                ForecastCategory=forecast_category,
+                CampaignId=campaign_id,
+                Pricebook2Id=pricebook2_id,
+                OwnerId=owner_id,
+                ContactId=contact_id,
+                ContractId=contract_id,
+                SyncedQuoteId=synced_quote_id,
+                custom_fields=custom_fields or {}
+            )
+            result = opportunity_object.update(opportunity_data, opportunity_id)
+            return {"success": True, "operation": "update", "opportunity_id": opportunity_id, "result": result}
+
+        elif operation == "delete":
+            if not opportunity_id:
+                raise ValueError("opportunity_id is required for delete operation")
+
+            result = opportunity_object.delete(opportunity_id)
+            return {"success": True, "operation": "delete", "opportunity_id": opportunity_id, "deleted": result}
+
+        elif operation == "get":
+            if not opportunity_id:
+                raise ValueError("opportunity_id is required for get operation")
+            result = opportunity_object.get(opportunity_id)
+            return {"success": True, "operation": "get", "opportunity_id": opportunity_id, "result": result}
+
+        else:
+            raise ValueError(f"Invalid operation: {operation}. Must be one of: create, update, delete, get")
+
+    except Exception as err:
+        raise err
 
 if __name__ == '__main__':
     try:
