@@ -44,7 +44,7 @@ class TestSfObject:
         mock_patch = mocker.patch.object(self.session.session, "patch", return_value=mock_patch_response)
 
         lead = LeadRecord(LastName="Weiss", Company="Test Company")
-        self.lead_object.update(lead, "mock_id")
+        self.lead_object.update("mock_id", lead)
 
         mock_post.assert_called_once()
         mock_patch.assert_called_once()

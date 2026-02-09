@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import TypeVar
 from abc import ABC, abstractmethod
 from salesforce_mcp.services.SalesforceSession import SalesforceSession
+from salesforce_mcp.types.SFRecord import SFRecord
 
 T = TypeVar('T')
 
@@ -27,5 +28,6 @@ class SfObject[T](ABC):
     def delete(self, id: str) -> bool:
         pass
 
-
-pass
+    @abstractmethod
+    def get(self, id: str) -> SFRecord:
+        pass
