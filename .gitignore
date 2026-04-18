@@ -210,3 +210,5 @@ __marimo__/
 settings.json
 .claude
 skills-lock.json
+.vscode
+.mcp.json
