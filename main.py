@@ -672,7 +672,7 @@ if __name__ == "__main__":
     try:
         print("hello world")
         logging.info("Starting MCP Server")
-        mcp.run()
+        mcp.run("stdio")
 
     except Exception as err:
         logging.error("Error initializing MCP server", exc_info=True)
