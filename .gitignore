@@ -208,3 +208,7 @@ __marimo__/
 .idea
 .ai
 settings.json
+.claude
+skills-lock.json
+.vscode
+.mcp.json
